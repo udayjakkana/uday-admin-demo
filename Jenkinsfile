@@ -24,7 +24,7 @@ pipeline {
     }
     
     stages {
-        stage('Initializing') {
+        stage('Initializing Pipeline') {
             steps {
                 echo "Initializing"
                 // determine if the build was trigger from a git event or manually built with parameters
@@ -33,9 +33,9 @@ pipeline {
                 echo sh(returnStdout: true, script: 'env')
             }
         }
-        stage('Bitbucket Sync Target Branch') {
+        stage('github Sync Target Branch') {
             steps {  
-                echo "Bitbucket Sync Target Branch"
+                echo "github Sync Target Branch"
                 bitbucketCheckout()
             }
         }
@@ -70,7 +70,7 @@ def salesforceDeploy() {
     else {
         deployBranchURL = "${env.BRANCH_NAME}"
     }
-    def DEPLOYDIR="/var/lib/jenkins/workspace/parambuild_${deployBranchURL}/bitbucket-checkout/force-app/main/default"
+    def DEPLOYDIR="/var/lib/jenkins/workspace/new_pipeline_${deployBranchURL}/github-checkout/force-app/main/default"
     echo DEPLOYDIR
     def SF_INSTANCE_URL = "https://login.salesforce.com"
 
@@ -138,8 +138,8 @@ def authSF() {
     echo 'end sf auth method'
 }
 
-def bitbucketCheckout() {
-    dir('bitbucket-checkout') {
+def githubCheckout() {
+    dir('github-checkout') {
         // determine if the build was trigger from a git event or manually built with parameters
         if ("${currentBuild.buildCauses}".contains("UserIdCause")) {
             echo "git checkout ${params.source_branch}"
@@ -152,7 +152,7 @@ def bitbucketCheckout() {
         }
     }
 
-    sh 'ls bitbucket-checkout'
+    sh 'ls github-checkout'
     echo "Current GIT Commit : ${env.GIT_COMMIT}"
     echo "Previous Known Successful GIT Commit : ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
 }
